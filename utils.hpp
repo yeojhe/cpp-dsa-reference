@@ -76,12 +76,27 @@ struct Tracer {
     // called when you write: Tracer t(42, "my_tracer");
     // std::move(t) by itself doesn't move anything, it's a cast that tells the compiler "I'm done with this
     // object, you can steal its resources". It converts an lvalue to an rvalue reference
-    // TODO: lvalue and rvalue
+    // lvalue (left value - can appear on left of assignment):
+    // - has a persistent identity (memory address)
+    // - can be assigned to
+    // - usually variables with names
+    // rvalue (right value - typically on the right of assignment)
+    // - temporary or literal values
+    // - cannot be assigned to
+    // - no persistent identity
+    // example of when they are not on the right of assignment:
+    // - process("hello"); -> "hello" is an rvalue
+    // - function returns
+    // - constructor arguments
+    // - operator arguments
+    // - conditional expressions
+    // rvalue references (&&)
+    // - c++11 feature that allows you to:
+    //      - detect when you're working with temporary objects
+    //      - optimize by moving instead of copying
+    //      - implement move semantics and perfect forwarding
     // in the constructor, tag(std::move(t)) efficiently transfers the string's memory instead of copying all the
     // characters
-    // TODO: in the constructor is "value" a default value that will be overwritten by a specified string? if it's
-    // being specified by a string passed in as a parameter, is it ok for that input string to be moved? should the
-    // caller of the function be aware that the string they pass this constructor is going to be moved?
     explicit Tracer(int v, std::string t = "value") : value(v), tag(std::move(t)) {
         std::cout << "Tracer(int) constructor [" << tag << "] value=" << value << "\n";
     }
@@ -157,7 +172,7 @@ struct Tracer {
 
 };
 
-
+// TODO: topics: perfect forwarding, templates, rvalue references
 
 
 
