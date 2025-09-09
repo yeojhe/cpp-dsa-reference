@@ -19,10 +19,33 @@ static void demo_basics() {
     std::cout << s << " (len=" << std::strlen(s) << ")\n";
 }
 
+static void demo_string_length() {
+    hr("String length");
+
+    // pointer to a string literal stored in read-only memory
+    // the embedded '\0' terminates the string early - "withjunk" won't be counted
+    const char *msg = "Hello\0withjunk";
+
+    // what the pointer actually points to:
+    // Memory layout (read-only section):
+    // Address:   0x1000  0x1001  0x1002  0x1003  0x1004  0x1005  0x1006  0x1007  ...
+    // Content:   'H'     'e'     'l'     'l'     'o'     '\0'    'w'     'i'     ...
+    //            ^
+    //            msg = 0x1000
+
+
+    // strlen stops at the first '\0', so it only counts "Hello"
+    std::cout << "strlen(msg)=" << std::strlen(msg) << "\n";
+    // this will print "withjunk" - as the pointer now stars after the \0
+    std::cout << msg + 6 << "\n";
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
             {"basics", "Basics", demo_basics}
     };
+
+    demo_string_length();
 
     return run_cli("Strings", demos, argc, argv);
 }
