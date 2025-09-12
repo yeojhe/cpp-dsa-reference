@@ -40,12 +40,37 @@ static void demo_string_length() {
     std::cout << msg + 6 << "\n";
 }
 
+static void demo_copy_join() {
+    hr("Copy & Join");
+
+    // create a 32-byte buffer on the stack, intialized to all zeros
+    // {} initialization sets all elements to 0, ensuring null termination
+    char dst[32] = {};
+
+    // copy "Hello" into dst buffer (including null terminator)
+    // SAFE because dst is large enough (32 bytes > 6 bytes needed)
+    std::strcpy(dst, "Hello");
+
+    // concatenate ", world" to the end of dst
+    // strcat finds the end of dst and appends the new string
+    std::strcat(dst, ", world");
+
+    // print the result: "Hello, world"
+    std::cout << dst << "\n";
+
+    // modern C++ way using std::string class
+    std::string a = "Hello";
+    std::string b = a + ", world"; // overloaded + operator
+    std::cout << b << "\n"; // same output but safer and more convenient
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
-            {"basics", "Basics", demo_basics}
-    };
+            {"basics", "Basics", demo_basics},
+            {"demo_string_length", "Demo String length", demo_string_length},
+            {"demo_copy_join", "Demo Copy Join", demo_copy_join}
 
-    demo_string_length();
+    };
 
     return run_cli("Strings", demos, argc, argv);
 }
