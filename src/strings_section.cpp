@@ -141,15 +141,50 @@ static void demo_copy_through_allocation() {
     heap = nullptr;
 }
 
+static void demo_copy_through_allocation_modern() {
+    hr("Copy through allocation - modern");
+
+    const char *src = "allocate me";
+    std::size_t n = std::strlen(src);
+
+    // smart pointer automatically allocates memory
+    // BUT if this line throws an exception AFTER new but BEFORE unique_ptr construction,
+    // a memory leak is possible
+    std::unique_ptr<char[]> heap(new char[n + 1]);
+
+    std::memcpy(heap.get(), src, n + 1);
+    std::cout << "heap=" << heap.get() << "\n";
+
+    // no manual delete needed and no dangling pointer possible
+}
+
+static void demo_copy_through_allocation_more_modern() {
+    hr("Copy through allocation - very modern");
+
+    const char *src = "allocate me";
+    std::size_t n = std::strlen(src);
+
+    // make unique is the preferred way (C++ 14)
+    // safe compared to above because there is no gap between allocation and smart pointer construction
+    // NOTE: unique_ptr is the type, make_unique creates a unique_ptr
+    auto heap = std::make_unique<char[]>(n + 1);
+
+    std::memcpy(heap.get(), src, n + 1);
+    std::cout << "heap=" << heap.get() << "\n";
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
             {"basics", "Basics", demo_basics},
             {"demo_string_length", "Demo String length", demo_string_length},
-            {"demo_copy_join", "Demo Copy Join", demo_copy_join}
+            {"demo_copy_join", "Demo Copy Join", demo_copy_join},
+            {"demo_copy_join_with_explicit_pointers", "Demo Copy Join with explicit pointers", demo_copy_join_with_explicit_pointers},
+            {"demo_copy_through_allocation", "Demo Copy through allocation", demo_copy_through_allocation}
 
     };
 
-    demo_copy_through_allocation();
+    demo_copy_through_allocation_modern();
+    demo_copy_through_allocation_more_modern();
 
     return run_cli("Strings", demos, argc, argv);
 }
