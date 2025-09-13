@@ -49,6 +49,7 @@ static void demo_copy_join() {
 
     // copy "Hello" into dst buffer (including null terminator)
     // SAFE because dst is large enough (32 bytes > 6 bytes needed)
+    // signature of
     std::strcpy(dst, "Hello");
 
     // concatenate ", world" to the end of dst
@@ -64,6 +65,53 @@ static void demo_copy_join() {
     std::cout << b << "\n"; // same output but safer and more convenient
 }
 
+static void demo_copy_join_with_explicit_pointers() {
+    hr("Copy & Join - explicit pointers");
+
+    char dst[32] = {};
+
+    // manual strcpy using pointers - what strcpy does internally
+
+    // src is a pointer to the rvalue "Hello", so it starts off pointing to the first character: 'H'
+    // dest_ptr points to the first positing in the array dst to being with
+    // then in the while loop until reaching the null terminator:
+    // - *destr_ptr represents the thing that is being pointed to by destr_ptr, which is the first
+    // position of the dst array
+    // - that first position of the dst array is then set to the thing that is being pointed to by src,
+    // represented by *src
+    // this is dereferencing
+    const char* src = "Hello";
+    // point to the start of the destination
+    char* dest_ptr = dst;
+    // while not at the null terminator:
+    while (*src != '\0') {
+        // copy character through pointers
+        *dest_ptr = *src;
+        dest_ptr++;
+        src++;
+    }
+    *dest_ptr = '\0';
+
+    // manual strcat using pointeres (what strcat does internally)
+    const char* append_src = ", world";
+
+    // find end of existing string
+    while (*dest_ptr != '\0') {
+        dest_ptr++;
+    }
+
+    // append new string
+    while (*append_src != '\0') {
+        *dest_ptr = *append_src;
+        dest_ptr++;
+        append_src++;
+    }
+    // add final null terminator
+    *dest_ptr = '\0';
+
+    std::cout << dst << "\n";
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
             {"basics", "Basics", demo_basics},
@@ -71,6 +119,8 @@ int main(int argc, char **argv) {
             {"demo_copy_join", "Demo Copy Join", demo_copy_join}
 
     };
+
+    demo_copy_join_with_explicit_pointers();
 
     return run_cli("Strings", demos, argc, argv);
 }
