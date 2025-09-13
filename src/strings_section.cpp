@@ -112,6 +112,35 @@ static void demo_copy_join_with_explicit_pointers() {
     std::cout << dst << "\n";
 }
 
+static void demo_copy_through_allocation() {
+    hr("Copy through Allocation");
+
+    // pointer to string literal in read-only memory
+    const char *src = "allocate me";
+
+    // get the length of source string (11 characters)
+    std::size_t n = std::strlen(src);
+
+    // allocate memory on the heap for n+1 characters (extra 1 for null terminator)
+    // new[] allocates an array of char - returns pointer to first element
+    char *heap = new char[n + 1];
+
+    // copy n+1 bytes from src to heap (includes the null terminator)
+    // memcpy copies raw bytes - doesn't stop at null terminators like strcpy
+    std::memcpy(heap, src, n + 1);
+
+    // print the copied string
+    std::cout << "heap=" << heap << "\n";
+
+    // CRITICAL: free the dynamically allocated memory
+    // must use delete[] for arrays allocated with new[]
+    // failure to do this causes memory leaks
+    delete[] heap;
+
+    // to avoid a dangling pointer:
+    heap = nullptr;
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
             {"basics", "Basics", demo_basics},
@@ -120,7 +149,7 @@ int main(int argc, char **argv) {
 
     };
 
-    demo_copy_join_with_explicit_pointers();
+    demo_copy_through_allocation();
 
     return run_cli("Strings", demos, argc, argv);
 }
