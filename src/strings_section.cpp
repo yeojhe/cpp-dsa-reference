@@ -173,18 +173,48 @@ static void demo_copy_through_allocation_more_modern() {
     std::cout << "heap=" << heap.get() << "\n";
 }
 
+static void demo_string_class() {
+    hr("std::string");
+
+    // create a std::string object - automatically manages memory
+    std::string s = "abc";
+
+    // add single character to the end of a string
+    s.push_back('d');
+
+    // concatenate string literal using += operator
+    s += "\"ef\"";
+
+    // print string and its size (number of characters, excluding null terminator)
+    std::cout << s << " size=" << s.size() << "\n";
+
+    // extract substring starting at index 1, length 3
+    // substr(1,3) gets characters at positions 1, 2, 3
+    std::cout << "substr(1, 3)=" << s.substr(1, 3) << "\n";
+
+    // find() returns position of substring, or std::string::npos if not found
+    std::cout << "find(\"cd\")=" << s.find("cd") << "\n";
+
+    // get C-string representation (const char*) of std::string
+    // this returns a pointer to an internal buffer - don't delete it!
+    const char *cview = s.c_str();
+    std::cout << "c_str()->" << cview << "\n";
+
+
+}
+
 int main(int argc, char **argv) {
     std::vector<Demo> demos = {
             {"basics", "Basics", demo_basics},
             {"demo_string_length", "Demo String length", demo_string_length},
             {"demo_copy_join", "Demo Copy Join", demo_copy_join},
             {"demo_copy_join_with_explicit_pointers", "Demo Copy Join with explicit pointers", demo_copy_join_with_explicit_pointers},
-            {"demo_copy_through_allocation", "Demo Copy through allocation", demo_copy_through_allocation}
+            {"demo_copy_through_allocation", "Demo Copy through allocation", demo_copy_through_allocation},
+            {"demo_string_class", "Demo string class", demo_string_class}
 
     };
 
-    demo_copy_through_allocation_modern();
-    demo_copy_through_allocation_more_modern();
+//    demo_string_class();
 
     return run_cli("Strings", demos, argc, argv);
 }
