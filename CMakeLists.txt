@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
 include_directories(${CMAKE_SOURCE_DIR})
-add_executable(strings_section src/strings_section.cpp
+add_executable(strings_section src/strings/strings_section.cpp
         utils.hpp)
 
 add_executable(strings_handrolled
-        src/strings_handrolled_demo.cpp
-        src/String.cpp
-        src/string_utils.h
-        src/String.hpp
-        src/string_utils.cpp
+        src/strings/strings_handrolled_demo.cpp
+        src/strings/String.cpp
+        src/strings/string_utils.h
+        src/strings/String.hpp
+        src/strings/string_utils.cpp
 )
