@@ -8,3 +8,11 @@ add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
 include_directories(${CMAKE_SOURCE_DIR})
 add_executable(strings_section src/strings_section.cpp
         utils.hpp)
+
+add_executable(strings_handrolled
+        src/strings_handrolled_demo.cpp
+        src/String.cpp
+        src/string_utils.h
+        src/String.hpp
+        src/string_utils.cpp
+)
