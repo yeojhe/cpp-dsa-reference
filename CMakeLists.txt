@@ -16,3 +16,4 @@ add_executable(strings_handrolled
         src/strings/String.hpp
         src/strings/string_utils.cpp
 )
+add_executable(static_arrays src/arrays/static_arrays.cpp)
